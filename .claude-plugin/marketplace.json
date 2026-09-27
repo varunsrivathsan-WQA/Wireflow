@@ -10,8 +10,8 @@
         "source": "github",
         "repo": "varunsrivathsan-WQA/wireflow"
       },
-      "description": "Build lo-fi wireframes from a plain-English brief as matched Figma + HTML/CSS deliverables, using WQA's 66-primitive Wireflow design system.",
-      "version": "0.6.0"
+      "description": "Build lo-fi wireframes from a plain-English brief as matched Figma + HTML/CSS deliverables using WQA's 66-primitive Wireflow design system, and resync the HTML whenever the Figma frame changes later.",
+      "version": "0.7.0"
     }
   ]
 }

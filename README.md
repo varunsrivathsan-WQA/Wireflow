@@ -1,18 +1,31 @@
 # Wireflow Wireframe
 
-A Claude Code / Cowork plugin that builds lo-fi wireframes as matched **Figma + HTML/CSS** deliverables from a plain-English brief, using WQA's 66-primitive Wireflow design system (grayscale + one link blue, real Lucide icons, shadcn/ui-parity radii).
+A Claude Code / Cowork plugin that builds lo-fi wireframes as matched **Figma + HTML/CSS** deliverables from a plain-English brief, using WQA's 66-primitive Wireflow design system (grayscale + one link blue, real Lucide icons, shadcn/ui-parity radii). It ships two skills: `wireflow-wireframe` to build a wireframe fresh, and `wireflow-update` to resync the HTML after the Figma frame is edited later.
 
 ## What it does
 
-Ask Claude for a wireframe ("wireframe a checkout flow", "mock up a SaaS pricing page") and this plugin's `wireflow` skill will:
+### `wireflow-wireframe` — build fresh
+
+Ask Claude for a wireframe ("wireframe a checkout flow", "mock up a SaaS pricing page") and this skill will:
 
 1. Confirm which Figma file to build into, and check that file's component library and the bundled CSS agree with each other before building anything.
 2. Map every element in your brief to one of Wireflow's 66 documented primitives (never an invented shape or class).
 3. Build a real Figma frame out of actual component instances — proper auto-layout, real variant properties, nothing hand-drawn.
-4. Build a matching self-contained HTML file using the same primitives' CSS classes.
+4. Build a matching self-contained HTML file using the same primitives' CSS classes, with an embedded marker recording which Figma frame it was built from.
 5. For a multi-screen flow ("wireframe the checkout flow"), link the screens into a real click-through prototype — actual `href`s between the generated HTML files plus matching Figma prototype connections, no JavaScript involved on either side.
 6. Apply layout-sizing discipline so nothing overflows its container — text fills its card instead of spilling past the edge, a row of cards renders equal-height, a button/toggle group is sized to fit its parent instead of blowing past it, and an image gallery is built as one composed pattern (Carousel-plus-thumbnails, or a single static image) rather than both at once.
 7. Report back both deliverables, flagging anything it wasn't sure how to map.
+
+### `wireflow-update` — resync after a Figma edit
+
+Once a wireframe exists, edit the Figma frame directly (add a section, remove a card, change some copy) and ask Claude to "update the HTML to match Figma" or "resync this wireframe." This skill will:
+
+1. Read the HTML file's embedded marker to find the Figma frame it was built from — no need to re-supply the Figma link.
+2. Compare the frame's current state against the HTML and classify every primitive as unchanged, changed, added, removed, or reordered.
+3. Patch only what changed, leaving any manual edits you made directly in the HTML untouched — this is a targeted patch, never a full regeneration.
+4. Re-run the same Figma/HTML parity check the build skill uses, and report exactly what it changed.
+
+This only works on a file `wireflow-wireframe` actually built (it needs that embedded marker) — a hand-written or externally-sourced HTML file has nothing for it to resync against.
 
 ## Requirements
 
@@ -25,18 +38,20 @@ Publishing the reference file as a library once means every future build skips t
 
 ## What's included
 
-- `skills/wireflow/SKILL.md` — the full build process: primitive vocabulary, token rules, icon handling, Figma structural-quality requirements (auto-layout, true variant component sets), and the hard rules that keep both outputs in sync.
-- `skills/wireflow/references/wireflow-tokens.css` — the canonical design tokens (colors, type scale, spacing, radius) that every primitive references.
-- `skills/wireflow/references/wireflow.css` — the full primitive stylesheet (one `.wf-*` class per primitive).
-- `skills/wireflow/references/catalog-artifact.html` — a self-contained, standalone preview of all 66 primitives. Open it directly in a browser (or download and double-click it) — no other files needed.
+- `skills/wireflow-wireframe/SKILL.md` — the full build process: token rules, icon handling, Figma structural-quality requirements (auto-layout, true variant component sets), and the hard rules that keep both outputs in sync.
+- `skills/wireflow-wireframe/references/primitives.md` — the exact markup pattern for each of the 66 primitives. Single source of truth, shared with `wireflow-update`.
+- `skills/wireflow-wireframe/references/wireflow-tokens.css` — the canonical design tokens (colors, type scale, spacing, radius) that every primitive references.
+- `skills/wireflow-wireframe/references/wireflow.css` — the full primitive stylesheet (one `.wf-*` class per primitive).
+- `skills/wireflow-wireframe/references/catalog-artifact.html` — a self-contained, standalone preview of all 66 primitives. Open it directly in a browser (or download and double-click it) — no other files needed.
+- `skills/wireflow-update/SKILL.md` — the resync process: locate the built HTML's source frame via its embedded marker, diff its current Figma state against the HTML, and patch only what changed.
 
 ## Installing
 
-Drag the `.plugin` file into Claude Code or Cowork, or add this repo as a marketplace source and install `wireflow` from it.
+Drag the `.plugin` file into Claude Code or Cowork, or add this repo as a marketplace source and install `wireflow` from it. Both skills come with the one plugin install.
 
 ## Updating
 
-This plugin bundles its own copies of the two CSS files so it works standalone. If the canonical Wireflow token/primitive files change, refresh the copies under `skills/wireflow/references/` and bump the version in `.claude-plugin/plugin.json` before re-publishing.
+This plugin bundles its own copies of the two CSS files so it works standalone. If the canonical Wireflow token/primitive files change, refresh the copies under `skills/wireflow-wireframe/references/` and bump the version in `.claude-plugin/plugin.json` before re-publishing.
 
 ## Marketplace `source` field format
 
