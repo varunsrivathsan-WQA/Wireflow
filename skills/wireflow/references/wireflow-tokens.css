@@ -1,11 +1,11 @@
 /*
- * Blankslate — design tokens
- * Single source of truth for the Blankslate wireframe kit.
+ * Wireflow — design tokens
+ * Single source of truth for the Wireflow wireframe kit.
  * Every primitive — HTML/CSS and Figma alike — references these
  * values only. Never a literal color, size, or spacing value.
  *
  * Figma side: these are mirrored 1:1 as bound variables in the
- * "Blankslate Tokens" collection (see the Figma file). Names match
+ * "Wireflow Tokens" collection (see the Figma file). Names match
  * exactly; see each variable's Code Syntax (WEB) in Figma to confirm.
  * The Figma file's "DS" page lays out every token below as a labeled
  * patch (swatch + name + hex), grouped into the same three layers.
@@ -38,7 +38,7 @@
  * Every non-color numeric token in this file belongs to one of two
  * families, each set up once at the global (Layer 1) level and never
  * mapped as a bare number anywhere else — every Layer 2 semantic token
- * below, and every rule in blankslate.css, references one of these,
+ * below, and every rule in wireflow.css, references one of these,
  * the same way M3 keeps Typography/Shape/State-opacity and Spacing as
  * separate global scales that everything else aliases into
  * (see m3.material.io/foundations/design-tokens/overview and
@@ -194,7 +194,7 @@
 
   /* The one real responsive breakpoint in the system — below this
      width, a primitive's mobile @media override takes over (currently
-     just Container's side padding; see .wf-container in blankslate.css).
+     just Container's side padding; see .wf-container in wireflow.css).
      Named as a raw px value, not a numbered token, since it's a single
      structural threshold, not a scale. */
   --breakpoint-mobile: 767px;
@@ -356,7 +356,7 @@
 
   /* Error/warning/success — infrastructure only, added alongside the
      Figma raw colors of the same name. No primitive currently consumes
-     these: Blankslate's own rule is "urgency is a label/icon, not a
+     these: Wireflow's own rule is "urgency is a label/icon, not a
      color" (see Alert/banner and the wireframe-builder skill's hard
      rules), so wiring these into a primitive's fill would cut against
      the kit's grayscale-plus-one-blue premise. They exist so that

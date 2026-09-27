@@ -1,17 +1,17 @@
 {
-  "name": "blankslate-wireframe-marketplace",
+  "name": "wireflow-marketplace",
   "owner": {
     "name": "Varun Srivathsan"
   },
   "plugins": [
     {
-      "name": "blankslate-wireframe",
+      "name": "wireflow",
       "source": {
         "source": "github",
-        "repo": "varunsrivathsan-WQA/blankslate-wireframe"
+        "repo": "varunsrivathsan-WQA/wireflow"
       },
-      "description": "Build lo-fi wireframes from a plain-English brief as matched Figma + HTML/CSS deliverables, using WQA's 66-primitive Blankslate design system.",
-      "version": "0.5.0"
+      "description": "Build lo-fi wireframes from a plain-English brief as matched Figma + HTML/CSS deliverables, using WQA's 66-primitive Wireflow design system.",
+      "version": "0.6.0"
     }
   ]
 }

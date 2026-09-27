@@ -1,5 +1,5 @@
 /*
- * Blankslate — component library
+ * Wireflow — component library
  * The HTML/CSS half of the primitives already live in Figma — the
  * original 50, plus a shadcn/ui-parity extension bringing the total to
  * 66. In the catalog and in Figma's page list the extension isn't a
@@ -10,7 +10,7 @@
  * together near the end (see "Additional primitives" below) purely to
  * keep the diff/history readable — that grouping is a stylesheet
  * convenience, not a category a user ever sees. Every rule references
- * blankslate-tokens.css custom properties only — never a literal color,
+ * wireflow-tokens.css custom properties only — never a literal color,
  * size, or spacing value, with a small set of documented exceptions
  * (Toggle/switch's pill radius, Avatar's circle, Accordion's 10px
  * vertical rhythm — shadcn/ui's non-scale "py-2.5"/"pb-2.5" — and a few
@@ -26,7 +26,7 @@
  * Pagination's page-number chips, Nav/menu item's active state (which
  * cascades into Sidebar, Navbar, and Dropdown), Modal/dialog shell,
  * Toast/snackbar, and Logo placeholder now all use a real radius
- * (--radius-20/2/3, see blankslate-tokens.css) instead of staying flat,
+ * (--radius-20/2/3, see wireflow-tokens.css) instead of staying flat,
  * and Alert/banner gained the icon + title + description anatomy real
  * shadcn Alert has. Icon button, Icon placeholder, List item's icon
  * slot, Select's dropdown chevron, Breadcrumb's separator, Footer's
@@ -37,7 +37,7 @@
  * round those either; Footer itself also stays flat (its container is
  * layout, only its social icons changed).
  *
- * Load order: link blankslate-tokens.css BEFORE this file. Nothing in
+ * Load order: link wireflow-tokens.css BEFORE this file. Nothing in
  * here works without the tokens already defined on :root.
  *
  * Class prefix: wf- (avoids collisions with anything else on a host
@@ -134,7 +134,7 @@
    Container primitive either way — the media query is what adapts it,
    not a second variant). The breakpoint itself (767px) is written as a
    literal below because @media conditions can't reference a CSS custom
-   property — it mirrors --breakpoint-mobile in blankslate-tokens.css;
+   property — it mirrors --breakpoint-mobile in wireflow-tokens.css;
    keep the two in sync if the threshold ever changes. */
 .wf-container {
   width: 100%;
@@ -1341,11 +1341,11 @@
 /* ============================================================
  * Additional primitives — shadcn/ui parity gap-fill (16)
  * Added to close the gaps identified against the shadcn/ui Figma kit
- * (see shadcn-vs-blankslate-comparison.md). Same rules as the original
+ * (see shadcn-vs-wireflow-comparison.md). Same rules as the original
  * 50: .wf- prefix, data-attribute variants, tokens only. Anatomy
  * (the sub-parts each primitive is built from — header/grid/cell,
  * viewport/track/slide, trigger/content, etc.) follows shadcn's own
- * component structure, translated into Blankslate's class-per-part
+ * component structure, translated into Wireflow's class-per-part
  * convention instead of shadcn's Tailwind utility classes.
  *
  * These 16 aren't a separate category anywhere a user browses them —

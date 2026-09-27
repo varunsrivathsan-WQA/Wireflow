@@ -1,7 +1,7 @@
 {
-  "name": "blankslate-wireframe",
-  "version": "0.5.0",
-  "description": "Build lo-fi wireframes from a plain-English brief as matched Figma + HTML/CSS deliverables, using WQA's 66-primitive Blankslate design system.",
+  "name": "wireflow",
+  "version": "0.6.0",
+  "description": "Build lo-fi wireframes from a plain-English brief as matched Figma + HTML/CSS deliverables, using WQA's 66-primitive Wireflow design system.",
   "author": {
     "name": "WQA"
   },

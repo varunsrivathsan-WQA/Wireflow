@@ -1,13 +1,13 @@
-<title>Blankslate Catalog</title>
+<title>Wireflow Catalog</title>
 <style>
 /*
- * Blankslate — design tokens
- * Single source of truth for the Blankslate wireframe kit.
+ * Wireflow — design tokens
+ * Single source of truth for the Wireflow wireframe kit.
  * Every primitive — HTML/CSS and Figma alike — references these
  * values only. Never a literal color, size, or spacing value.
  *
  * Figma side: these are mirrored 1:1 as bound variables in the
- * "Blankslate Tokens" collection (see the Figma file). Names match
+ * "Wireflow Tokens" collection (see the Figma file). Names match
  * exactly; see each variable's Code Syntax (WEB) in Figma to confirm.
  * The Figma file's "DS" page lays out every token below as a labeled
  * patch (swatch + name + hex), grouped into the same three layers.
@@ -40,7 +40,7 @@
  * Every non-color numeric token in this file belongs to one of two
  * families, each set up once at the global (Layer 1) level and never
  * mapped as a bare number anywhere else — every Layer 2 semantic token
- * below, and every rule in blankslate.css, references one of these,
+ * below, and every rule in wireflow.css, references one of these,
  * the same way M3 keeps Typography/Shape/State-opacity and Spacing as
  * separate global scales that everything else aliases into
  * (see m3.material.io/foundations/design-tokens/overview and
@@ -351,7 +351,7 @@
 
   /* Error/warning/success — infrastructure only, added alongside the
      Figma raw colors of the same name. No primitive currently consumes
-     these: Blankslate's own rule is "urgency is a label/icon, not a
+     these: Wireflow's own rule is "urgency is a label/icon, not a
      color" (see Alert/banner and the wireframe-builder skill's hard
      rules), so wiring these into a primitive's fill would cut against
      the kit's grayscale-plus-one-blue premise. They exist so that
@@ -410,7 +410,7 @@
 }
 
 /*
- * Blankslate — component library
+ * Wireflow — component library
  * The HTML/CSS half of the primitives already live in Figma — the
  * original 50, plus a shadcn/ui-parity extension bringing the total to
  * 66. In the catalog and in Figma's page list the extension isn't a
@@ -421,7 +421,7 @@
  * together near the end (see "Additional primitives" below) purely to
  * keep the diff/history readable — that grouping is a stylesheet
  * convenience, not a category a user ever sees. Every rule references
- * blankslate-tokens.css custom properties only — never a literal color,
+ * wireflow-tokens.css custom properties only — never a literal color,
  * size, or spacing value, with a small set of documented exceptions
  * (Toggle/switch's pill radius, Avatar's circle, Accordion's 10px
  * vertical rhythm — shadcn/ui's non-scale "py-2.5"/"pb-2.5" — and a few
@@ -437,7 +437,7 @@
  * Pagination's page-number chips, Nav/menu item's active state (which
  * cascades into Sidebar, Navbar, and Dropdown), Modal/dialog shell,
  * Toast/snackbar, and Logo placeholder now all use a real radius
- * (--radius-20/2/3, see blankslate-tokens.css) instead of staying flat,
+ * (--radius-20/2/3, see wireflow-tokens.css) instead of staying flat,
  * and Alert/banner gained the icon + title + description anatomy real
  * shadcn Alert has. Icon button, Icon placeholder, List item's icon
  * slot, Select's dropdown chevron, Breadcrumb's separator, Footer's
@@ -448,7 +448,7 @@
  * round those either; Footer itself also stays flat (its container is
  * layout, only its social icons changed).
  *
- * Load order: link blankslate-tokens.css BEFORE this file. Nothing in
+ * Load order: link wireflow-tokens.css BEFORE this file. Nothing in
  * here works without the tokens already defined on :root.
  *
  * Class prefix: wf- (avoids collisions with anything else on a host
@@ -1706,11 +1706,11 @@
 /* ============================================================
  * Additional primitives — shadcn/ui parity gap-fill (16)
  * Added to close the gaps identified against the shadcn/ui Figma kit
- * (see shadcn-vs-blankslate-comparison.md). Same rules as the original
+ * (see shadcn-vs-wireflow-comparison.md). Same rules as the original
  * 50: .wf- prefix, data-attribute variants, tokens only. Anatomy
  * (the sub-parts each primitive is built from — header/grid/cell,
  * viewport/track/slide, trigger/content, etc.) follows shadcn's own
- * component structure, translated into Blankslate's class-per-part
+ * component structure, translated into Wireflow's class-per-part
  * convention instead of shadcn's Tailwind utility classes.
  *
  * These 16 aren't a separate category anywhere a user browses them —
@@ -2217,7 +2217,7 @@
 /* ============================================================
  * Catalog chrome — built from the same tokens above. The kit's
  * own aesthetic (grayscale, one blue, system font, boxy) is the
- * catalog's aesthetic too: this page is a Blankslate artifact,
+ * catalog's aesthetic too: this page is a Wireflow artifact,
  * not a separate brand wrapped around one.
  * ============================================================ */
 * { box-sizing: border-box; }
@@ -2260,7 +2260,7 @@ a { color: var(--link); }
    remaining space — a standard docs-site split, not a centered pair. */
 .bs-shell { display: flex; align-items: flex-start; width: 100%; }
 
-/* The nav is a real Blankslate Sidebar instance — the kit documenting
+/* The nav is a real Wireflow Sidebar instance — the kit documenting
    itself with its own primitive, not a bespoke nav bar. */
 .bs-nav {
   position: sticky; top: 61px; left: 0;
@@ -2387,7 +2387,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <header class="bs-topbar">
   <div class="bs-topbar-id">
-    <h1>Blankslate</h1>
+    <h1>Wireflow</h1>
     <span class="bs-topbar-count">66 primitives · 2 files · 0 dependencies</span>
   </div>
   <div class="bs-topbar-actions">
@@ -2413,7 +2413,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="bs-intro">
       <p class="wf-eyebrow">Component catalog</p>
       <h2 class="wf-heading" data-level="2">All 66 primitives, live</h2>
-      <p class="wf-body" style="color:var(--ink-600)">Same anatomy per part, real Lucide icons, Blankslate's own tokens throughout. Every block below is real <code style="font-family:var(--font-mono)">blankslate.css</code> — the same markup renders in your own pages. Click a snippet's <strong>Copy</strong> button, or use the sidebar to jump to a category. The dot-grid behind each preview marks it as a live render, not a screenshot.</p>
+      <p class="wf-body" style="color:var(--ink-600)">Same anatomy per part, real Lucide icons, Wireflow's own tokens throughout. Every block below is real <code style="font-family:var(--font-mono)">wireflow.css</code> — the same markup renders in your own pages. Click a snippet's <strong>Copy</strong> button, or use the sidebar to jump to a category. The dot-grid behind each preview marks it as a live render, not a screenshot.</p>
     </div>
 
         <section class="bs-section" id="layout">
@@ -2495,7 +2495,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <div class="bs-spec">
           <div class="bs-spec-head"><span class="bs-spec-name">Footer</span></div>
-          <div class="bs-spec-preview" style="padding:0;background:none;"><footer class="wf-footer" style="max-width:100%;"><div class="wf-row wf-footer__columns"><nav class="wf-stack" style="gap:var(--gap-20)"><h3>Product</h3><a class="wf-footer__link">Features</a><a class="wf-footer__link">Pricing</a></nav></div><hr class="wf-divider"><div class="wf-row" style="justify-content:space-between;align-items:center"><small>&copy; 2026 Blankslate</small><div class="wf-row"><svg class="wf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><svg class="wf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><svg class="wf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></div></div></footer></div>
+          <div class="bs-spec-preview" style="padding:0;background:none;"><footer class="wf-footer" style="max-width:100%;"><div class="wf-row wf-footer__columns"><nav class="wf-stack" style="gap:var(--gap-20)"><h3>Product</h3><a class="wf-footer__link">Features</a><a class="wf-footer__link">Pricing</a></nav></div><hr class="wf-divider"><div class="wf-row" style="justify-content:space-between;align-items:center"><small>&copy; 2026 Wireflow</small><div class="wf-row"><svg class="wf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><svg class="wf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><svg class="wf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></div></div></footer></div>
           <div class="bs-spec-code-wrap"><pre class="bs-spec-code"><code>&lt;footer class="wf-footer"&gt;&lt;div class="wf-row wf-footer__columns"&gt;...&lt;/div&gt;&lt;hr class="wf-divider"&gt;...&lt;div class="wf-row"&gt;&lt;svg class="wf-icon"&gt;...&lt;/svg&gt;...&lt;/div&gt;&lt;/footer&gt;</code></pre><button class="bs-copy-btn" onclick="bsCopy(this)">Copy</button></div>
         </div>
 
@@ -2902,5 +2902,5 @@ document.addEventListener('DOMContentLoaded', function () {
 </div>
 
 <footer class="bs-footer">
-  Blankslate — 66 primitives, one token file, two files to ship (<code>blankslate-tokens.css</code> + <code>blankslate.css</code>). Matching Figma library keeps the same names, one component per page.
+  Wireflow — 66 primitives, one token file, two files to ship (<code>wireflow-tokens.css</code> + <code>wireflow.css</code>). Matching Figma library keeps the same names, one component per page.
 </footer>
