@@ -2020,11 +2020,13 @@
     border-top: none;
   }
 
-  /* Scroll container — becomes fluid up to its original 320px instead
-     of a hard 320px that can crowd a 375px viewport's own gutters. */
+  /* Scroll container — goes edge-to-edge like every other structurally-
+     reflowing primitive here (Grid, Sidebar, Button/Toggle group): fills
+     the mobile Container's full content width (343px inside the 16px
+     mobile gutter) instead of staying pinned to its 320px desktop/tablet
+     size — matches the Figma Mobile variant exactly. */
   .wf-scroll {
     width: 100%;
-    max-width: 320px;
   }
 }
 

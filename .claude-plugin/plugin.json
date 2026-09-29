@@ -1,9 +1,15 @@
 {
   "name": "wireflow",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Build lo-fi wireframes from a plain-English brief as matched Figma + HTML/CSS deliverables using WQA's 66-primitive Wireflow design system, and resync the HTML whenever the Figma frame changes later.",
   "author": {
     "name": "WQA"
   },
-  "keywords": ["wireframe", "figma", "design-system", "lo-fi", "prototyping"]
+  "keywords": [
+    "wireframe",
+    "figma",
+    "design-system",
+    "lo-fi",
+    "prototyping"
+  ]
 }

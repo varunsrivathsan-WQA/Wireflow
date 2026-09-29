@@ -190,9 +190,35 @@
 
   /* Reference frame widths — the HTML is authored/reviewed at these
      exact viewport widths, and the Figma frames are built at these
-     exact widths, so a pixel-parity comparison is apples-to-apples. */
+     exact widths, so a pixel-parity comparison is apples-to-apples.
+     Three tiers now (desktop/tablet/mobile) — see the breakpoint note
+     below for how the two thresholds between them map to @media rules. */
   --viewport-desktop: 1440px;
+  --viewport-tablet: 768px;
   --viewport-mobile: 375px;
+
+  /* The two responsive thresholds in the system. Desktop is the
+     default (no media query — every rule's base value already targets
+     1440px); at or below --breakpoint-tablet, tablet overrides take
+     over (proportional type/spacing scaling — see wireflow.css's
+     "Proportional scaling" block — plus any primitive-specific tablet
+     rule); at or below --breakpoint-mobile, a further, more aggressive
+     tier takes over on top of that (tighter type/spacing, plus
+     structural reflow for primitives that need real rearrangement —
+     Navbar's link row hiding behind a static menu-toggle icon, Sidebar
+     stacking full-width, Grid collapsing to one column, Table/Tab bar
+     scrolling horizontally, Button group/Toggle group stacking
+     vertically — see wireflow.css's "Structural reflow" block).
+     Named as raw px values, not numbered tokens, since these are
+     single structural thresholds, not a scale — and because a CSS
+     custom property cannot be referenced inside an @media feature
+     value, so every actual @media rule in wireflow.css hard-codes
+     these same two numbers literally rather than doing
+     `@media (max-width: var(--breakpoint-tablet))` (which silently
+     doesn't work). Keep these two facts in sync by hand if either
+     number ever changes. */
+  --breakpoint-tablet: 1439px;
+  --breakpoint-mobile: 767px;
 
   /* ---- SIZE family — opacity scale ----
      Flat 10% steps, no separate raw/semantic tier — unlike the type,
@@ -309,6 +335,7 @@
   --border-placeholder: var(--border-width) dashed var(--ink-200);
 
   --frame-desktop: var(--viewport-desktop);
+  --frame-tablet: var(--viewport-tablet);
   --frame-mobile: var(--viewport-mobile);
 }
 
@@ -476,6 +503,27 @@
  *
  * No JS in v1 — Accordion/Tab bar/Dropdown all render one static,
  * "open"/"active" visual state. See IDEATION.md, "Bare bones and fast."
+ *
+ * Responsive: three tiers (desktop 1440px / tablet 768px / mobile 375px
+ * — see --viewport-* and --breakpoint-* in wireflow-tokens.css). Two
+ * mechanisms, in two dedicated sections of this file:
+ * - "Responsive scaling" (right after this comment) redefines a small
+ *   set of Layer-2 custom properties — the largest type and spacing
+ *   rungs only — inside @media blocks. Every primitive below still just
+ *   writes var(--font-60), var(--padding-horizontal-80), etc.; it never
+ *   gets its own per-breakpoint rule for this. This is what makes type
+ *   and page-edge spacing shrink automatically at tablet/mobile with
+ *   zero per-primitive changes.
+ * - "Structural reflow" (near the end of this file, after "Additional
+ *   primitives") holds the handful of primitives where shrinking isn't
+ *   enough and the layout has to actually rearrange at mobile — Grid's
+ *   columns collapsing to one, Navbar's link row hiding behind a static
+ *   menu-toggle icon, Sidebar stacking full-width, Table/Tab bar
+ *   scrolling horizontally, Button group/Toggle group stacking
+ *   vertically. Each of these primitives' own base rule above is
+ *   unchanged; the mobile-only override lives in that later section so
+ *   the two concerns (what a primitive looks like vs. how it reflows)
+ *   stay easy to find separately.
  */
 
 /* Icon — inlined Lucide SVG. Sizing + stroke-width only; every icon's
@@ -491,6 +539,65 @@
 }
 .wf-icon[data-size="md"] { width: 20px; height: 20px; }
 .wf-icon[data-size="lg"] { width: 24px; height: 24px; }
+
+/* ============================================================
+ * Responsive scaling — tablet/mobile
+ * Redefines a handful of Layer-2 tokens from wireflow-tokens.css
+ * inside @media blocks so every primitive that already references them
+ * (var(--font-60), var(--padding-horizontal-80), etc.) shrinks
+ * automatically at the two narrower tiers — no primitive below has its
+ * own copy of this. Only the largest rungs move:
+ * - Type: --font-40/50/60 + their paired --line-40/50/60 (the display/
+ *   heading range — Heading levels 1-3, Empty state's title). --font-10
+ *   /20/30 (body text, labels, and Heading levels 4-6, which already
+ *   share that smaller range) stay put at every tier on purpose — only
+ *   the largest text shrinks, matching how a real responsive type scale
+ *   compresses its top end first.
+ * - Spacing: --padding-horizontal-70/80 and --padding-vertical-70/80
+ *   (the page-edge gutter and the heaviest section rhythm — Container/
+ *   Navbar/Footer's side padding, Footer/Empty state's vertical
+ *   padding). --gap-* and the smaller padding rungs stay put — item
+ *   spacing inside a component doesn't need to compress, only the
+ *   outermost page-level margins do.
+ * - Radius intentionally does NOT scale here — a control's corner
+ *   rounding stays the same regardless of viewport, matching real
+ *   shadcn/ui and every other mainstream design system.
+ * Each step below reuses an existing rung one or two steps down the
+ * same scale rather than inventing a new pixel value, so a shrunk
+ * heading at tablet lines up exactly with the un-shrunk size one level
+ * down (e.g. a level-1 Heading at tablet renders at exactly the same
+ * size a level-2 Heading renders at on desktop) — this is also the
+ * mapping the Figma Size variant (lg/md/sm) pilot mirrors, so the two
+ * sides stay in lockstep with no separate scale to maintain.
+ * The two breakpoints are written as literal px below (767 / 1439)
+ * because an @media feature value can't reference a custom property —
+ * see the note on --breakpoint-tablet/--breakpoint-mobile in
+ * wireflow-tokens.css; keep both in sync by hand if either changes.
+ * ============================================================ */
+@media (max-width: 1439px) {
+  :root {
+    --font-60: var(--scale-50);  --line-60: var(--line-height-50);
+    --font-50: var(--scale-40);  --line-50: var(--line-height-40);
+    --font-40: var(--scale-30);  --line-40: var(--line-height-30);
+
+    --padding-horizontal-80: var(--space-60);
+    --padding-horizontal-70: var(--space-50);
+    --padding-vertical-80: var(--space-60);
+    --padding-vertical-70: var(--space-50);
+  }
+}
+@media (max-width: 767px) {
+  :root {
+    --font-60: var(--scale-40);  --line-60: var(--line-height-40);
+    --font-50: var(--scale-30);  --line-50: var(--line-height-30);
+    --font-40: var(--scale-20);  --line-40: var(--line-height-20);
+
+    --padding-horizontal-80: var(--space-40);
+    --padding-horizontal-70: var(--space-30);
+    --padding-vertical-80: var(--space-40);
+    --padding-vertical-70: var(--space-30);
+  }
+}
 
 /* ============================================================
  * Layout & structure (8)
@@ -514,23 +621,42 @@
   color: var(--ink-400);
 }
 
-/* Section — full-width band with vertical rhythm and a tint, for
-   stacking page regions. Nest .wf-container inside for a centered,
-   max-width content column. HTML: <section class="wf-section">. */
+/* Section — full-width band with vertical rhythm, for stacking page
+   regions. Same background as the page/Container/Card (--ink-0) — a
+   real lo-fi wireframe never tints a structural band differently from
+   the page it sits on; the only elements that ever get a different
+   fill are the deliberate placeholder shapes (Image placeholder, Avatar,
+   Icon placeholder, Logo placeholder — see their own rules), never a
+   layout primitive. Vertical padding is --padding-vertical-50 (24px) —
+   deliberately lighter than a Card's own internal padding, since a
+   Section is a page-level rhythm band stacking several regions, not a
+   single boxed surface; don't reach for --padding-vertical-70 (48px)
+   here even though it's a valid token elsewhere, it reads as too heavy
+   at this scale. Nest .wf-container inside for a centered, max-width
+   content column. HTML: <section class="wf-section">. */
 .wf-section {
   width: 100%;
-  padding: var(--padding-vertical-70) 0;
+  padding: var(--padding-vertical-50) 0;
   box-sizing: border-box;
-  background-color: var(--ink-50);
+  background-color: var(--ink-0);
 }
 
 /* Container — centered, max-width content column with side gutters.
-   HTML: <div class="wf-container"> nested inside a page or section. */
+   HTML: <div class="wf-container"> nested inside a page or section.
+   Side padding is --padding-horizontal-80 at every tier — it doesn't
+   need its own @media rule because that token itself is redefined at
+   tablet/mobile in the "Responsive scaling" block above (64px desktop
+   → 32px tablet → 16px mobile), and every primitive reading it — this
+   one, Navbar, Footer — picks up the new value automatically. This is
+   the outermost page-edge gutter specifically; it does not change how
+   Container's own padding behaves when nested inside a card or other
+   non-page-edge context (there is only one Container primitive either
+   way). */
 .wf-container {
   width: 100%;
   max-width: var(--frame-desktop);
   margin: 0 auto;
-  padding: 0 var(--padding-horizontal-60);
+  padding: 0 var(--padding-horizontal-80);
   box-sizing: border-box;
   background-color: var(--ink-0);
 }
@@ -604,9 +730,17 @@
 /* Navbar — logo, nav links, CTA. The Figma version uses a full border
    as a stand-in (Figma's per-side stroke weights are unreliable);
    CSS can do the more correct border-bottom directly — a strict
-   fidelity improvement, not a regression.
+   fidelity improvement, not a regression. Side padding is
+   --padding-horizontal-80, same token (and same automatic tablet/mobile
+   shrink — see "Responsive scaling" above) as Container and Footer, so
+   every full-width page-edge band shares the same side gutter and
+   content lines up vertically across the whole page. At mobile, the
+   nav-links row and CTA hide behind a static menu-toggle icon (no JS —
+   see the Navbar entry in "Structural reflow" near the end of this
+   file for that override and the markup it expects).
    HTML: <nav class="wf-navbar"><div class="wf-navbar__logo"></div>
-   <div class="wf-row">…nav items…</div><button class="wf-button" …>…</button></nav> */
+   <div class="wf-row">…nav items…</div><button class="wf-button" …>…</button>
+   <button class="wf-navbar__menu-toggle" aria-label="Menu">…menu icon…</button></nav> */
 .wf-navbar {
   display: flex;
   align-items: center;
@@ -614,7 +748,7 @@
   width: 100%;
   max-width: var(--frame-desktop);
   height: 64px;
-  padding: 0 var(--padding-horizontal-60);
+  padding: 0 var(--padding-horizontal-80);
   box-sizing: border-box;
   background-color: var(--ink-0);
   border-bottom: var(--border-width) solid var(--ink-200);
@@ -626,7 +760,12 @@
 }
 .wf-navbar .wf-row { gap: var(--gap-50); }
 
-/* Footer — link columns, a divider, a bottom legal row.
+/* Footer — link columns, a divider, a bottom legal row. Side padding
+   is --padding-horizontal-80, same token (and same automatic tablet/
+   mobile shrink) as Navbar's and Container's — see the note on
+   .wf-navbar above. Vertical padding (--padding-vertical-70) shrinks
+   the same way at tablet/mobile, so Footer doesn't carry desktop-sized
+   whitespace into a narrow viewport.
    HTML: <footer class="wf-footer">
      <div class="wf-row wf-footer__columns">
        <nav class="wf-stack" style="gap:var(--gap-20)"><h3>…</h3><a class="wf-footer__link">…</a>…</nav>
@@ -640,9 +779,10 @@
   gap: var(--gap-50);
   width: 100%;
   max-width: var(--frame-desktop);
-  padding: var(--padding-vertical-70) var(--padding-horizontal-60);
+  padding: var(--padding-vertical-70) var(--padding-horizontal-80);
   box-sizing: border-box;
-  background-color: var(--ink-50);
+  background-color: var(--ink-0);
+  border-top: var(--border-width) solid var(--ink-200);
 }
 .wf-footer__columns { gap: var(--gap-60); }
 .wf-footer h3 {
@@ -2212,6 +2352,141 @@
 .wf-toggle-group button[data-active="true"] {
   background-color: var(--ink-900);
   color: var(--ink-0);
+}
+
+/* ============================================================
+ * Structural reflow — mobile only
+ * The eight primitives above whose desktop/tablet layout doesn't just
+ * get smaller at mobile — it has to actually rearrange. Everything
+ * else in this file relies entirely on the "Responsive scaling" block
+ * near the top; these eight get one extra, primitive-specific
+ * override here, gated to the same literal 767px breakpoint (see the
+ * note on that block for why it's a literal, not a var()). Each
+ * primitive's own base rule earlier in this file is unchanged — this
+ * section only adds what's different at mobile.
+ * ============================================================ */
+@media (max-width: 767px) {
+  /* Grid — cells go full-width, so a wrapping row of fixed-width cells
+     becomes a single column instead of an uneven, unpredictable wrap
+     count on a narrow viewport. */
+  .wf-grid-cell {
+    width: 100%;
+  }
+
+  /* Navbar — the link row and CTA hide behind a static menu-toggle
+     icon (no JS in v1, same "one static visual state" precedent as
+     Accordion/Tab bar/Dropdown — see the file header). The markup
+     always includes the toggle button; it's simply not shown above
+     mobile. */
+  .wf-navbar .wf-row,
+  .wf-navbar > .wf-button {
+    display: none;
+  }
+  .wf-navbar__menu-toggle {
+    display: flex;
+  }
+
+  /* Sidebar — stacks full-width above its content instead of sitting
+     beside it in a fixed 240px column (240px of a 375px viewport
+     leaves too little room for real content next to it). Its right
+     border becomes a bottom border to match the new stacked position.
+     Build-time judgment call, not a CSS one: when a screen has both a
+     Navbar and a Sidebar, the mobile build should usually omit Sidebar
+     entirely — Navbar's menu-toggle already represents navigation at
+     that width — and only keep this stacked treatment for a screen
+     where Sidebar is the sole nav. See wireflow-wireframe/SKILL.md. */
+  .wf-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: var(--border-width) solid var(--ink-200);
+  }
+
+  /* Table — scrolls horizontally instead of squeezing every column
+     into a too-narrow viewport. No markup change: switching a <table>
+     to display:block is what makes overflow-x apply to it at all. */
+  .wf-table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Tab bar — scrolls horizontally rather than wrapping tabs onto a
+     second row (a wrapped tab bar reads as broken, not responsive). */
+  .wf-tab-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .wf-tab {
+    flex-shrink: 0;
+  }
+
+  /* Button group — stacks vertically. Re-derives the seamless-seam
+     border/radius logic for a vertical stack: the horizontal version's
+     border-left/border-radius pairing (see the base rule above) would
+     put rounded corners and a missing divider on the wrong sides once
+     the items are stacked instead of side-by-side. */
+  .wf-button-group {
+    flex-direction: column;
+  }
+  .wf-button-group__item {
+    border-radius: 0;
+  }
+  .wf-button-group__item:not(:first-child) {
+    border-left: var(--border-width) solid var(--ink-200);
+    border-top: none;
+  }
+  .wf-button-group__item:first-child {
+    border-radius: var(--radius-30) var(--radius-30) 0 0;
+  }
+  .wf-button-group__item:last-child {
+    border-radius: 0 0 var(--radius-30) var(--radius-30);
+  }
+
+  /* Toggle group — same reasoning as Button group above: the outer
+     container's border + radius + overflow:hidden already clip
+     correctly in either direction, so only the inner per-button
+     divider needs to move from a left edge to a top edge. */
+  .wf-toggle-group {
+    flex-direction: column;
+  }
+  .wf-toggle-group button {
+    border-left: none;
+    border-top: var(--border-width) solid var(--ink-200);
+  }
+  .wf-toggle-group button:first-child {
+    border-top: none;
+  }
+
+  /* Scroll container — goes edge-to-edge like every other structurally-
+     reflowing primitive here (Grid, Sidebar, Button/Toggle group): fills
+     the mobile Container's full content width (343px inside the 16px
+     mobile gutter) instead of staying pinned to its 320px desktop/tablet
+     size — matches the Figma Mobile variant exactly. */
+  .wf-scroll {
+    width: 100%;
+  }
+}
+
+/* Navbar menu-toggle — the hamburger affordance Navbar's mobile reflow
+   (above) reveals. Always present in the markup, hidden above mobile
+   by the base rule below; the mobile override in "Structural reflow"
+   is what shows it.
+   HTML: <button class="wf-navbar__menu-toggle" aria-label="Menu">
+   <svg class="wf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+   stroke-linecap="round" stroke-linejoin="round">
+   <path d="M4 12h16"/><path d="M4 6h16"/><path d="M4 18h16"/></svg></button> */
+.wf-navbar__menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-900);
 }
 
 /* ============================================================

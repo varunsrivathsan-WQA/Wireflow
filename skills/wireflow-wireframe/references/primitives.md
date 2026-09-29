@@ -28,7 +28,7 @@ Copy these patterns, don't paraphrase them. Each category below is the full blen
 **Typography (6)**
 - Blockquote — `<blockquote class="wf-blockquote"><p>"…"</p><cite>— Attribution</cite></blockquote>`
 - Body text — `<p class="wf-body">…</p>`
-- Eyebrow/label — `<p class="wf-eyebrow">Eyebrow label</p>`
+- Eyebrow/label text — `<p class="wf-eyebrow">Eyebrow label</p>`
 - Heading — `<h2 class="wf-heading" data-level="2">…</h2>` (data-level 1–6, independent of the semantic tag)
 - Link text — `<a class="wf-link" href="#">Link text</a>` (the ONLY place blue appears)
 - Placeholder text block — `<p class="wf-placeholder-text">Lorem ipsum…</p>`
@@ -66,7 +66,7 @@ Copy these patterns, don't paraphrase them. Each category below is the full blen
 - Toggle/switch — `<label class="wf-toggle" data-checked="true"><span class="wf-toggle__track"><span class="wf-toggle__knob"></span></span>Toggle label</label>` (pill exception; Figma side is a variant set — the track/knob stay a plain absolutely-positioned frame inside each variant, same reasoning as Slider)
 
 **Data & content display (9)**
-- Accordion item — `<div class="wf-accordion-item"><div class="wf-accordion-item__header"><h4 class="wf-heading" data-level="4">…</h4><svg class="wf-icon" ...>…chevron…</svg></div><hr class="wf-divider"><p class="wf-accordion-item__body">…</p></div>` (radius-40; renders open/static — no JS in v1)
+- Accordion — `<div class="wf-accordion-item"><div class="wf-accordion-item__header"><h4 class="wf-heading" data-level="4">…</h4><svg class="wf-icon" ...>…chevron…</svg></div><hr class="wf-divider"><p class="wf-accordion-item__body">…</p></div>` (radius-40; renders open/static — no JS in v1)
 - Badge/tag — `<span class="wf-badge">Badge</span>` (radius-30, matching Button — not a smaller radius)
 - Card — `<div class="wf-card"><div class="wf-image-placeholder">…</div><h3 class="wf-heading" data-level="3">Card title</h3><p class="wf-body">…</p><button class="wf-button">Learn more</button></div>` (radius-40)
 - Chat bubble (ext) — `<div class="wf-bubble" data-role="assistant">…</div>` (data-role: assistant | user)
@@ -81,7 +81,7 @@ Copy these patterns, don't paraphrase them. Each category below is the full blen
 - Empty state (ext) — `<div class="wf-empty"><span class="wf-icon-placeholder"><svg class="wf-icon">…</svg></span><h3 class="wf-empty__title">No results</h3><p class="wf-empty__body">…</p><button class="wf-button" data-variant="primary">Reset filters</button></div>`
 - Modal/dialog shell — `<div class="wf-modal"><div class="wf-modal__header"><h2 class="wf-heading" data-level="3">Title</h2><button><svg class="wf-icon">…×…</svg></button></div><hr class="wf-divider"><p class="wf-modal__body">…</p><div class="wf-modal__footer"><button class="wf-button" data-variant="secondary">Cancel</button><button class="wf-button" data-variant="primary">Confirm</button></div></div>` (radius-40; Sheet/Drawer upgrade: add `data-position="right"|"left"|"bottom"` to slide from an edge instead of centering — those edge variants stay flat on purpose)
 - Progress bar — `<div class="wf-progress"><div class="wf-progress__fill" style="width:62%"></div></div>` (pill exception; no flex container in the CSS at all — stays a plain Figma frame)
-- Skeleton loader (ext) — `<span class="wf-skeleton" data-shape="text"></span>` (data-shape: text | circle; each shape is a single leaf shimmer shape with nothing to lay out)
+- Skeleton loader (ext) — `<span class="wf-skeleton" data-shape="text"></span>` (data-shape: text | circle | rect; each shape is a single leaf shimmer shape with nothing to lay out)
 - Spinner (ext) — `<svg class="wf-spinner" viewBox="0 0 24 24">…</svg>` (its own rotating class, not `.wf-icon`; the component is just the icon instance filling the frame — nothing to lay out)
 - Toast/snackbar — `<div class="wf-toast"><span>Message.</span><button><svg class="wf-icon">…×…</svg></button></div>` (radius-40)
 - Tooltip — `<div class="wf-tooltip"><span class="wf-tooltip__bubble">Tooltip text</span><span class="wf-tooltip__pointer"></span></div>` (simple bubble: radius-20; rich variant/Hover Card upgrade: radius-40, and its bubble is a vertical auto-layout stack of a heading + body paragraph with a real gap token between them — never two text nodes placed side by side; Figma side is a variant set)
