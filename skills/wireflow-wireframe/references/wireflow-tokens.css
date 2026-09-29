@@ -188,15 +188,34 @@
 
   /* Reference frame widths — the HTML is authored/reviewed at these
      exact viewport widths, and the Figma frames are built at these
-     exact widths, so a pixel-parity comparison is apples-to-apples. */
+     exact widths, so a pixel-parity comparison is apples-to-apples.
+     Three tiers now (desktop/tablet/mobile) — see the breakpoint note
+     below for how the two thresholds between them map to @media rules. */
   --viewport-desktop: 1440px;
+  --viewport-tablet: 768px;
   --viewport-mobile: 375px;
 
-  /* The one real responsive breakpoint in the system — below this
-     width, a primitive's mobile @media override takes over (currently
-     just Container's side padding; see .wf-container in wireflow.css).
-     Named as a raw px value, not a numbered token, since it's a single
-     structural threshold, not a scale. */
+  /* The two responsive thresholds in the system. Desktop is the
+     default (no media query — every rule's base value already targets
+     1440px); at or below --breakpoint-tablet, tablet overrides take
+     over (proportional type/spacing scaling — see wireflow.css's
+     "Proportional scaling" block — plus any primitive-specific tablet
+     rule); at or below --breakpoint-mobile, a further, more aggressive
+     tier takes over on top of that (tighter type/spacing, plus
+     structural reflow for primitives that need real rearrangement —
+     Navbar's link row hiding behind a static menu-toggle icon, Sidebar
+     stacking full-width, Grid collapsing to one column, Table/Tab bar
+     scrolling horizontally, Button group/Toggle group stacking
+     vertically — see wireflow.css's "Structural reflow" block).
+     Named as raw px values, not numbered tokens, since these are
+     single structural thresholds, not a scale — and because a CSS
+     custom property cannot be referenced inside an @media feature
+     value, so every actual @media rule in wireflow.css hard-codes
+     these same two numbers literally rather than doing
+     `@media (max-width: var(--breakpoint-tablet))` (which silently
+     doesn't work). Keep these two facts in sync by hand if either
+     number ever changes. */
+  --breakpoint-tablet: 1439px;
   --breakpoint-mobile: 767px;
 
   /* ---- SIZE family — opacity scale ----
@@ -314,6 +333,7 @@
   --border-placeholder: var(--border-width) dashed var(--ink-200);
 
   --frame-desktop: var(--viewport-desktop);
+  --frame-tablet: var(--viewport-tablet);
   --frame-mobile: var(--viewport-mobile);
 }
 
