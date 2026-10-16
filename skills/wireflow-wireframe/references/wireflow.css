@@ -1941,7 +1941,9 @@
      always includes the toggle button; it's simply not shown above
      mobile. */
   .wf-navbar .wf-row,
-  .wf-navbar > .wf-button {
+  .wf-navbar > .wf-button,
+  .wf-navbar > .wf-nav-item,
+  .wf-navbar > a:not(.wf-navbar__logo) {
     display: none;
   }
   .wf-navbar__menu-toggle {

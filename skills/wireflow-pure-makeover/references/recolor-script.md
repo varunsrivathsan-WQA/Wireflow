@@ -41,6 +41,21 @@ for (const [role, name] of Object.entries(ROLE_NAMES)) {
 return { missing, roles, available: vars.map(v => v.name) };
 ```
 
+## Step A2: Wireflow variables that live only in the library
+
+If `getLocalVariablesAsync` finds no Wireflow colors, search the library first (one `search_design_system` call per variable, `entity: 'variable'`, scoped with `includeLibraryKeys`), then import by key and use the returned variable ids as `roles`.
+
+```js
+const KEYS = { surface: 'REPLACE', surfaceAlt: 'REPLACE', surfaceMuted: 'REPLACE', border: 'REPLACE', borderStrong: 'REPLACE', textPrimary: 'REPLACE', textSecondary: 'REPLACE', textOnDark: 'REPLACE', action: 'REPLACE', link: 'REPLACE', imagePlaceholder: 'REPLACE' };
+const roles = {};
+const failed = [];
+for (const [role, key] of Object.entries(KEYS)) {
+  try { const v = await figma.variables.importVariableByKeyAsync(key); roles[role] = v.id; }
+  catch (e) { failed.push(role + ': ' + e.message); }
+}
+return { roles, failed };
+```
+
 ## Step B: recolor (write), run per batch
 
 Paste the resolved `roles` ids into `ROLE_IDS`. `FRAME_ID` is the target frame, `SECTION_IDS` limits a batch (or leave empty for the whole frame on small pages).
@@ -73,6 +88,8 @@ async function pureName(paint) {
 function classify(c, name, ctx) {
   if (ctx === 'text') {
     if (/link|anchor/.test(name)) return 'link';
+    // Pure's input placeholder text is named like 'input/inverse' but must stay readable on a light field
+    if (/input/.test(name) && /inverse/.test(name)) return 'textSecondary';
     if (/inverse|on-dark|on-primary|on-action/.test(name)) return 'textOnDark';
     if (/muted|secondary|subtle|helper|placeholder/.test(name)) return 'textSecondary';
     const L = lum(c);
@@ -81,6 +98,7 @@ function classify(c, name, ctx) {
     return 'textSecondary';
   }
   if (ctx === 'stroke') {
+    if (/primary|brand|action|accent|cta/.test(name)) return 'action'; // primary button border matches its fill
     if (/strong|emphasis|focus/.test(name)) return 'borderStrong';
     return lum(c) < 0.35 ? 'borderStrong' : 'border';
   }
@@ -170,3 +188,56 @@ return { count: bad.length, sample: bad.slice(0, 40) };
 ```
 
 Also count instances before and after (`frame.findAll(n => n.type === 'INSTANCE').length`) to prove nothing was detached.
+
+## Pure component quirks (apply before recoloring)
+
+Reported from real runs; confirm on the actual instance and adjust.
+
+- **TextInput and Select** have a 300px minimum width and a fixed 320px inner field. Clear the minimum and make the inner field fill its parent.
+- **Link**'s default variant is a fixed-height paragraph. Resize it to hug its text.
+- **CheckoutOption and PaymentMethods** do not reflow at 375px. Don't try to fix this; flag it in the report.
+
+```js
+const FRAME_ID = 'REPLACE';
+const frame = await figma.getNodeByIdAsync(FRAME_ID);
+const fixed = { inputs: 0, links: 0, failed: [] };
+for (const inst of frame.findAll(n => n.type === 'INSTANCE')) {
+  const comp = inst.mainComponent;
+  const name = comp ? (comp.parent && comp.parent.type === 'COMPONENT_SET' ? comp.parent.name : comp.name) : '';
+  try {
+    if (/^(TextInput|Select)$/i.test(name)) {
+      inst.minWidth = null;
+      const wide = inst.findAll(n => 'layoutSizingHorizontal' in n && n.width >= 300 && n.width <= 340 && n !== inst);
+      for (const n of wide) n.layoutSizingHorizontal = 'FILL';
+      fixed.inputs++;
+    } else if (/^Link$/i.test(name)) {
+      inst.layoutSizingVertical = 'HUG';
+      for (const t of inst.findAll(n => n.type === 'TEXT')) t.layoutSizingVertical = 'HUG';
+      fixed.links++;
+    }
+  } catch (e) { fixed.failed.push(inst.id + ': ' + e.message); }
+}
+return fixed;
+```
+
+## Dark copy (optional Step 7)
+
+Clone the finished frame and switch the clone to the Dark mode of the Wireflow color collection. Re-read the original's position first; place the clone beside the user's wrapper, never over it.
+
+```js
+const FRAME_ID = 'REPLACE';
+const COLLECTION_NAME = 'Blankslate Tokens'; // the Wireflow semantic color collection
+const frame = await figma.getNodeByIdAsync(FRAME_ID);
+const roleVar = await figma.variables.getVariableByIdAsync('REPLACE'); // any role variable from this collection
+const collection = await figma.variables.getVariableCollectionByIdAsync(roleVar.variableCollectionId);
+const dark = collection.modes.find(m => /dark/i.test(m.name));
+if (!dark) throw new Error('no Dark mode in ' + collection.name);
+const copy = frame.clone();
+copy.name = frame.name + ' - Dark';
+const box = frame.absoluteBoundingBox;
+copy.x = frame.x + box.width + 80;
+copy.setExplicitVariableModeForCollection(collection, dark.modeId);
+return { copyId: copy.id, mode: dark.name, collection: collection.name };
+```
+
+After cloning, count instances on the copy in a separate call and compare with the original.

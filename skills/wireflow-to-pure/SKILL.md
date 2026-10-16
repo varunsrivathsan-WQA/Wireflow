@@ -22,6 +22,8 @@ Ask in one round (AskUserQuestion):
 2. **Pure context:** standard storefront or the "elevated" theme (this changes the header, footer, cards and accordions), and whether the product is ecommerce, marketing, or leader tools.
 3. **Output:** Figma side-by-side view (default when the wireframe is a Figma frame), report in chat, markdown file, or a combination. The report is always produced in chat; the Figma view is added on top.
 
+4. **Figma libraries (before building anything):** if the Figma side-by-side view is wanted, run `get_libraries` now and ask the user to add Pure Base, Pure Ecommerce and Pure Iconography in the Assets panel if they are not subscribed. Do this up front, not halfway through a build.
+
 If the page is clearly a product page, a listing page or checkout, say which page type you inferred and let the user correct it.
 
 ## Step 1: read the wireframe
@@ -54,6 +56,14 @@ Note the real copy and any flow links. They help decide what a region is (a card
 | Section with eyebrow and headline | `BasicSection` (ui-marketing) |
 | Page-level two-column layout | `Grid` + `Grid.Column` with responsive spans, not Flex |
 | Tags and promo chips | `EcommerceTag` on elevated PDPs, otherwise `Tag`/`Badge` |
+| Checkout: shipping method | `CheckoutOption` |
+| Checkout: payment | `PaymentMethods` |
+| Checkout: line items | `MiniProductCard` |
+| Checkout: order summary | `OrderSummary` in code; the nearest Figma component is "Your Order" |
+| Checkout: discount code | No match found |
+| Checkout: address check (optional) | `AddressVerification` |
+
+The checkout rows come from a real checkout build; still confirm each with `search_components` in this run before marking it Confirmed.
 
 For anything not in this list, query the Pure MCP:
 
@@ -61,6 +71,7 @@ For anything not in this list, query the Pure MCP:
 - `recommend_components` with an `intent` string for a region (works well, for example "product listing grid with filters and pagination").
 - `search_components` with a `query` for a specific UI element.
 - `get_block` for a block id, and `get_component_api` for every component you name, before listing props.
+- `TextInput` and `Select` come back from `get_component_api` with no props. Fall back to their Storybook examples (ask the user for the Storybook link if you don't have it) and mark the line Likely.
 - `match_components_for_region` is meant for Figma regions, but through some connections it ignores free text and returns generic "region" matches. If its result shows `regionName: "region"`, discard it and use `recommend_components` and `search_components` instead.
 
 ### Primitive map (starting point; confirm each with the MCP)
@@ -169,3 +180,11 @@ Do this when the wireframe is a Figma frame and the user wants the visual view (
 6. **Links.** The search results give keys and a library path, not a clickable Figma URL (that needs the library file key and a node id, which the search does not return). Show the library path as the reference, and add a Storybook or docs URL only if the user supplies one. Never construct or guess a URL.
 7. **Colors.** Leave the instances in Pure's own colors; this view shows what the components really are. Recoloring to Wireflow tokens is the `wireflow-pure-makeover` skill's job; mention it if the user asks.
 8. **Verify.** Screenshot the new frame next to the wireframe (`get_screenshot`), confirm each row's instance renders (no missing-font or empty frames), and confirm the wireframe frame is unchanged. Report anything that failed to import by name.
+
+### Fonts, placement and annotation rules for the Figma view
+
+- **Load Pure's font first.** Pure components use Rawline. Before placing any instance, load every available Rawline style (`figma.listAvailableFontsAsync()`, filter family `Rawline`, `loadFontAsync` each). A failed placement can leave stray copies at the page origin; after the build, find and remove any instance you created that sits on the page outside the suggestions frame.
+- **Never move the user's frames.** Place the suggestions frame next to the outermost wrapper the user has made around the wireframe (the top-level ancestor on the page), not inside it. Read frame positions fresh on every call; the user may be editing at the same time.
+- **Resize a parent before repositioning its children.** Child frames set to stay centred move when the parent resizes, so resize the parent first, then place or move what is inside it.
+- **Two columns when the wireframe has side-by-side regions** (for example a form beside an order summary): put those regions in two columns in the suggestions frame instead of stacking them.
+- **Annotation text sizes:** 32px for the frame title, 18px for component names, 16px for region labels, tags and status lines.
