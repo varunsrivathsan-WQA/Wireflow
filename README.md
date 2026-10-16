@@ -1,6 +1,6 @@
 # Wireflow Wireframe
 
-A Claude Code / Cowork plugin that builds lo-fi wireframes as matched **Figma + HTML/CSS** deliverables from a plain-English brief, using WQA's 66-primitive Wireflow design system (grayscale + one link blue, real Lucide icons, shadcn/ui-parity radii). It ships four skills: `wireflow-wireframe` to build a wireframe fresh, `wireflow-update` to resync the HTML after the Figma frame is edited later, `wireflow-to-pure` to map a finished wireframe to doTERRA Pure components, and `pure-makeover` to build with real Pure components and recolor them to Wireflow tokens.
+A Claude Code / Cowork plugin that builds lo-fi wireframes as matched **Figma + HTML/CSS** deliverables from a plain-English brief, using WQA's 66-primitive Wireflow design system (grayscale + one link blue, real Lucide icons, shadcn/ui-parity radii). It ships four skills: `wireflow-wireframe` to build a wireframe fresh, `wireflow-update` to resync the HTML after the Figma frame is edited later, `wireflow-to-pure` to map a finished wireframe to doTERRA Pure components, and `wireflow-pure-makeover` to build with real Pure components and recolor them to Wireflow tokens.
 
 ## What it does
 
@@ -31,7 +31,7 @@ This only works on a file `wireflow-wireframe` actually built (it needs that emb
 
 Give it a Wireflow wireframe (Figma frame or built HTML) and it produces a mapping report, plus (for a Figma frame) a "Pure suggestions" frame placed beside the wireframe with the real Pure components, captioned with name, package, match status and library path (components that exist only in code get a text card). It does not write anything else to Figma. The report: which Pure component or block fits each region, with the package and key props, marked Confirmed, Likely or No match. It needs the Pure MCP connected. It reports structure only: it does not write JSX unless asked, never writes to Figma, and flags where a generic wireframe doesn't fit Pure's doTERRA-specific page templates (for example a gallery on a standard product page).
 
-### `pure-makeover` — Pure components in Wireflow colors
+### `wireflow-pure-makeover` — Pure components in Wireflow colors
 
 Builds a page from real Pure components in Figma, then recolors every fill, stroke and text color on those instances to your Wireflow variables (images become gray placeholders, shadows are removed by default). It uses instance overrides in your own file: Pure's library is never edited and instances are never detached. It tests on one or two components first, then recolors the whole frame and audits for any paint left unbound. Layout, spacing and radii stay Pure's, and overrides can reset when a variant is swapped (just rerun it). Needs the Pure libraries enabled in the Figma file and Wireflow's color variables present.
 
@@ -52,7 +52,7 @@ Publishing the reference file as a library once means every future build skips t
 - `skills/wireflow-wireframe/references/wireflow.css` — the full primitive stylesheet (one `.wf-*` class per primitive).
 - `skills/wireflow-wireframe/references/catalog-artifact.html` — a self-contained, standalone preview of all 66 primitives. Open it directly in a browser (or download and double-click it) — no other files needed.
 - `skills/wireflow-to-pure/SKILL.md` — maps a wireframe to Pure components and blocks using the Pure MCP.
-- `skills/pure-makeover/SKILL.md` and `references/recolor-script.md` — build with Pure, recolor to Wireflow tokens, and the role map, recolor and audit scripts.
+- `skills/wireflow-pure-makeover/SKILL.md` and `references/recolor-script.md` — build with Pure, recolor to Wireflow tokens, and the role map, recolor and audit scripts.
 - `skills/wireflow-update/SKILL.md` — the resync process: locate the built HTML's source frame via its embedded marker, diff its current Figma state against the HTML, and patch only what changed.
 
 ## Installing

@@ -1,9 +1,9 @@
 ---
-name: pure-makeover
+name: wireflow-pure-makeover
 description: Builds a wireframe from real doTERRA Pure design-system components in Figma, then recolors every Pure fill, stroke and text color to Wireflow's grayscale tokens using instance-level overrides, without editing the Pure library. Use when asked to build a wireframe with Pure components in Wireflow colors, give Pure components a Wireflow or black-and-white makeover, or recolor a Pure-based frame to Wireflow tokens.
 ---
 
-# Pure makeover
+# Wireflow pure makeover
 
 Build with real Pure components, then re-point their colors to Wireflow's variables so the result reads as a wireframe. Figma only. Pure's library is never edited: the recolor happens as overrides on instances inside the user's own file.
 
