@@ -1,6 +1,6 @@
 # Wireflow Wireframe
 
-A Claude Code / Cowork plugin that builds lo-fi wireframes as matched **Figma + HTML/CSS** deliverables from a plain-English brief, using WQA's 66-primitive Wireflow design system (grayscale + one link blue, real Lucide icons, shadcn/ui-parity radii). It ships two skills: `wireflow-wireframe` to build a wireframe fresh, and `wireflow-update` to resync the HTML after the Figma frame is edited later.
+A Claude Code / Cowork plugin that builds lo-fi wireframes as matched **Figma + HTML/CSS** deliverables from a plain-English brief, using WQA's 66-primitive Wireflow design system (grayscale + one link blue, real Lucide icons, shadcn/ui-parity radii). It ships three skills: `wireflow-wireframe` to build a wireframe fresh, `wireflow-update` to resync the HTML after the Figma frame is edited later, and `wireflow-to-pure` to map a finished wireframe to doTERRA Pure components.
 
 ## What it does
 
@@ -27,6 +27,10 @@ Once a wireframe exists, edit the Figma frame directly (add a section, remove a 
 
 This only works on a file `wireflow-wireframe` actually built (it needs that embedded marker) — a hand-written or externally-sourced HTML file has nothing for it to resync against.
 
+### `wireflow-to-pure` — point a wireframe at the right Pure components
+
+Give it a Wireflow wireframe (Figma frame or built HTML) and it produces a mapping report: which Pure component or block fits each region, with the package and key props, marked Confirmed, Likely or No match. It needs the Pure MCP connected. It reports structure only: it does not write JSX unless asked, never writes to Figma, and flags where a generic wireframe doesn't fit Pure's doTERRA-specific page templates (for example a gallery on a standard product page).
+
 ## Requirements
 
 This skill needs the Wireflow component library available to whatever Figma file you're building into — all 66 primitives plus the Icon component set. It checks for this automatically and picks one of two paths:
@@ -43,11 +47,12 @@ Publishing the reference file as a library once means every future build skips t
 - `skills/wireflow-wireframe/references/wireflow-tokens.css` — the canonical design tokens (colors, type scale, spacing, radius) that every primitive references.
 - `skills/wireflow-wireframe/references/wireflow.css` — the full primitive stylesheet (one `.wf-*` class per primitive).
 - `skills/wireflow-wireframe/references/catalog-artifact.html` — a self-contained, standalone preview of all 66 primitives. Open it directly in a browser (or download and double-click it) — no other files needed.
+- `skills/wireflow-to-pure/SKILL.md` — maps a wireframe to Pure components and blocks using the Pure MCP.
 - `skills/wireflow-update/SKILL.md` — the resync process: locate the built HTML's source frame via its embedded marker, diff its current Figma state against the HTML, and patch only what changed.
 
 ## Installing
 
-Drag the `.plugin` file into Claude Code or Cowork, or add this repo as a marketplace source and install `wireflow` from it. Both skills come with the one plugin install.
+Drag the `.plugin` file into Claude Code or Cowork, or add this repo as a marketplace source and install `wireflow` from it. All three skills come with the one plugin install.
 
 ## Updating
 
