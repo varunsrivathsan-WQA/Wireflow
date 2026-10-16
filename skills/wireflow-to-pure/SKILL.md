@@ -1,11 +1,11 @@
 ---
 name: wireflow-to-pure
-description: Maps a Wireflow wireframe (Figma frame or built HTML) to the matching doTERRA Pure design-system components and blocks, using the Pure MCP. Use when asked which Pure components to use for a wireframe, or to translate a wireframe into Pure.
+description: Maps a Wireflow wireframe (Figma frame or built HTML) to the matching doTERRA Pure design-system components and blocks, using the Pure MCP, and can place the real Pure Figma components in a frame beside the wireframe. Use when asked which Pure components to use for a wireframe, to see Pure suggestions next to a wireframe, or to translate a wireframe into Pure.
 ---
 
 # Wireflow to Pure
 
-Take a wireframe built from Wireflow primitives and tell the user which Pure components, blocks and recipes to use for each part of it. Output is a mapping report. Do not write JSX unless the user asks, and never write to Figma.
+Take a wireframe built from Wireflow primitives and tell the user which Pure components, blocks and recipes to use for each part of it. Output is a mapping report and, for a Figma wireframe, an optional side-by-side frame with the real Pure components. Do not write JSX unless the user asks. The only thing this skill may write to Figma is a new suggestions frame beside the wireframe (Step 5); never modify the wireframe itself.
 
 Wireflow is structure only (grayscale, 66 primitives). Pure is the branded production system (doTERRA, React, `@doterra-it/*`). This skill translates structure into the right Pure pieces; it does not translate styling.
 
@@ -20,7 +20,7 @@ Ask in one round (AskUserQuestion):
 
 1. **Wireframe:** Figma link (with node ID) or HTML file path.
 2. **Pure context:** standard storefront or the "elevated" theme (this changes the header, footer, cards and accordions), and whether the product is ecommerce, marketing, or leader tools.
-3. **Output:** report in chat, or a markdown file.
+3. **Output:** Figma side-by-side view (default when the wireframe is a Figma frame), report in chat, markdown file, or a combination. The report is always produced in chat; the Figma view is added on top.
 
 If the page is clearly a product page, a listing page or checkout, say which page type you inferred and let the user correct it.
 
@@ -156,3 +156,16 @@ For each section, top to bottom: the Wireflow primitives used, the recommended P
 3. An offer to generate JSX from the report, which would use `get_block`/fixtures for wiring and finish with `validate_component_usage` returning zero errors (and `validate_layout` for multi-column pages).
 
 Keep the report short enough to scan. Do not restate Pure's full rules or the whole primitive table back to the user.
+
+## Step 5: side-by-side view in Figma
+
+Do this when the wireframe is a Figma frame and the user wants the visual view (the default). Recipe and scripts are in `references/side-by-side-recipe.md`. Load the `figma-use` skill first and run `use_figma` calls one at a time.
+
+1. **Libraries.** `get_libraries` on the wireframe's file. Pure Base, Pure Ecommerce and Pure Iconography should be in `libraries_added_to_file`. If any are only under available-to-add, tell the user to add them in the Assets panel (you cannot subscribe a library); this only subscribes the file and edits nothing in Pure. Until they do, still deliver the report, and show text cards instead of components.
+2. **Find the real components.** For each Confirmed or Likely mapping, `search_design_system` with the Pure library keys in `includeLibraryKeys`. Results give `componentKey` or `componentSetKey` and a `filePath` (for example `design_systems/doTERRA Pure - Base - 1.2.2/components/Tabs`). Import with `importComponentSetByKeyAsync` (use `defaultVariant`) or `importComponentByKeyAsync`.
+3. **Build one new frame beside the wireframe**, named `Pure suggestions - <wireframe name>`, about 120px to the right and the same height. Never edit the wireframe frame.
+4. **One row per mapped region, aligned to the region's vertical position** (nudge down if a suggestion would overlap the previous one). Each row has a small region label (the Wireflow primitives), the Pure instance at its natural size, and a caption: Pure name, package, **Confirmed / Likely / No match**, and the library path.
+5. **No Figma component.** Pure has Figma libraries for Base, Ecommerce and Iconography only. Components that exist in code but not in Figma (marketing, leader tools, extensions) and "No match" items get a text card instead: the component name, package, the key props from `get_component_api`, and a plain "exists in code, no Figma component" or "no Pure equivalent" line.
+6. **Links.** The search results give keys and a library path, not a clickable Figma URL (that needs the library file key and a node id, which the search does not return). Show the library path as the reference, and add a Storybook or docs URL only if the user supplies one. Never construct or guess a URL.
+7. **Colors.** Leave the instances in Pure's own colors; this view shows what the components really are. Recoloring to Wireflow tokens is the `pure-makeover` skill's job; mention it if the user asks.
+8. **Verify.** Screenshot the new frame next to the wireframe (`get_screenshot`), confirm each row's instance renders (no missing-font or empty frames), and confirm the wireframe frame is unchanged. Report anything that failed to import by name.

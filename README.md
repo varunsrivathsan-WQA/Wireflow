@@ -29,7 +29,7 @@ This only works on a file `wireflow-wireframe` actually built (it needs that emb
 
 ### `wireflow-to-pure` — point a wireframe at the right Pure components
 
-Give it a Wireflow wireframe (Figma frame or built HTML) and it produces a mapping report: which Pure component or block fits each region, with the package and key props, marked Confirmed, Likely or No match. It needs the Pure MCP connected. It reports structure only: it does not write JSX unless asked, never writes to Figma, and flags where a generic wireframe doesn't fit Pure's doTERRA-specific page templates (for example a gallery on a standard product page).
+Give it a Wireflow wireframe (Figma frame or built HTML) and it produces a mapping report, plus (for a Figma frame) a "Pure suggestions" frame placed beside the wireframe with the real Pure components, captioned with name, package, match status and library path (components that exist only in code get a text card). It does not write anything else to Figma. The report: which Pure component or block fits each region, with the package and key props, marked Confirmed, Likely or No match. It needs the Pure MCP connected. It reports structure only: it does not write JSX unless asked, never writes to Figma, and flags where a generic wireframe doesn't fit Pure's doTERRA-specific page templates (for example a gallery on a standard product page).
 
 ### `pure-makeover` — Pure components in Wireflow colors
 
