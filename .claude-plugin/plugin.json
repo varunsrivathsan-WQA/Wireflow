@@ -1,7 +1,7 @@
 {
   "name": "wireflow",
-  "version": "0.8.0",
-  "description": "Build lo-fi wireframes from a plain-English brief as matched Figma + HTML/CSS deliverables using WQA's 66-primitive Wireflow design system, resync the HTML whenever the Figma frame changes later, and map a finished wireframe to the matching doTERRA Pure components.",
+  "version": "0.9.0",
+  "description": "Build lo-fi wireframes from a plain-English brief as matched Figma + HTML/CSS deliverables using WQA's 66-primitive Wireflow design system, resync the HTML whenever the Figma frame changes later, and map a finished wireframe to the matching doTERRA Pure components, and build wireframes from Pure components recolored to Wireflow tokens.",
   "author": {
     "name": "WQA"
   },
